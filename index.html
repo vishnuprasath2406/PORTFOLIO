@@ -24,6 +24,9 @@ h1,h2,h3{margin:0;font-weight:400}
 section{padding:96px 4vw}
 .wrap{max-width:1320px;margin:0 auto}
 
+/* scroll progress */
+.prog{position:fixed;top:0;left:0;height:5px;width:100%;background:var(--red);transform-origin:0 50%;transform:scaleX(var(--p,0));z-index:50}
+
 /* ticker */
 .tick{background:var(--ink);color:var(--bg);overflow:hidden;white-space:nowrap;font:400 15px var(--mono);padding:9px 0}
 .tick div{display:inline-block;animation:mq 34s linear infinite}
@@ -47,10 +50,40 @@ nav ul a:hover{text-decoration:underline;text-underline-offset:5px}
 .hero-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:4vw;align-items:center;margin-top:28px}
 .hero-grid p{font-size:22px;max-width:30ch;margin:0 0 22px}
 .cta{display:flex;gap:14px;flex-wrap:wrap}
-.photo{aspect-ratio:4/5;width:100%;max-width:460px;justify-self:end;background:var(--yel);border:3px solid var(--ink);border-radius:20px;position:relative;overflow:hidden;display:grid;place-items:end center}
-.photo svg{width:78%;height:auto}
-.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 35%}
-.photo figcaption{position:absolute;left:14px;top:12px;z-index:2;background:var(--bg);color:var(--ink);border:2px solid var(--ink);border-radius:99px;padding:3px 14px}
+
+/* ===== 3D PHOTO ===== */
+.stage{justify-self:end;width:100%;max-width:460px;padding:30px 30px 50px 10px;position:relative}
+.photo{margin:0;aspect-ratio:4/5;width:100%;position:relative;transform-style:preserve-3d;
+ transform:perspective(1200px) rotateY(var(--ry,-14deg)) rotateX(var(--rx,5deg)) rotateZ(var(--rz,0deg));
+ transition:transform .35s cubic-bezier(.2,.8,.2,1);will-change:transform}
+.photo .layer{position:absolute;inset:0;border:3px solid var(--ink);border-radius:20px}
+.photo .l1{background:var(--yel);transform:translateZ(0);overflow:hidden;display:grid;place-items:end center}
+.photo .l1 svg{width:78%;height:auto}
+.photo .l2{background:var(--lime);transform:translateZ(-34px)}
+.photo .l3{background:var(--red);transform:translateZ(-68px)}
+.photo .l4{background:var(--ink);transform:translateZ(-102px);box-shadow:0 50px 70px rgba(0,0,0,.4)}
+.photo img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 35%;border-radius:17px;transform:translateZ(40px);box-shadow:0 30px 44px rgba(0,0,0,.4);border:3px solid var(--ink)}
+.photo .shine{position:absolute;inset:0;border-radius:17px;transform:translateZ(42px);pointer-events:none;mix-blend-mode:soft-light;
+ background:linear-gradient(115deg,transparent calc(var(--sh,50%) - 22%),rgba(255,255,255,.75) var(--sh,50%),transparent calc(var(--sh,50%) + 22%))}
+.photo figcaption{position:absolute;left:14px;top:12px;transform:translateZ(90px);background:var(--bg);color:var(--ink);border:2px solid var(--ink);border-radius:99px;padding:3px 14px}
+.chip{position:absolute;font:700 14px var(--mono);background:var(--bg);color:var(--ink);border:2px solid var(--ink);border-radius:99px;padding:6px 16px;box-shadow:4px 4px 0 var(--ink);white-space:nowrap}
+.chip.c1{right:-26px;top:16%;transform:translateZ(130px);background:var(--lime);color:#141414;animation:fl 3.4s ease-in-out infinite}
+.chip.c2{left:-30px;top:52%;transform:translateZ(110px);background:var(--yel);color:#141414;animation:fl 4s ease-in-out -1s infinite}
+.chip.c3{right:-12px;bottom:10%;transform:translateZ(150px);animation:fl 3.8s ease-in-out -2s infinite}
+@keyframes fl{0%,100%{margin-top:0}50%{margin-top:-14px}}
+.ring{position:absolute;width:128px;height:128px;left:-44px;bottom:-30px;transform:translateZ(160px) rotate(var(--sp,0deg));pointer-events:none}
+.ring svg{width:100%;height:100%;overflow:visible}
+.ring text{font:700 12px var(--mono);letter-spacing:.14em;fill:var(--ink)}
+.ring .disc{fill:var(--lime);stroke:var(--ink);stroke-width:3}
+.cube{position:absolute;right:-10px;top:-26px;width:46px;height:46px;transform-style:preserve-3d;transform:translateZ(120px) rotateX(var(--cx,-25deg)) rotateY(var(--cy,35deg))}
+.cube i{position:absolute;inset:0;border:2px solid var(--ink);background:var(--yel)}
+.cube i:nth-child(1){transform:translateZ(23px)}
+.cube i:nth-child(2){transform:rotateY(90deg) translateZ(23px);background:var(--lime)}
+.cube i:nth-child(3){transform:rotateY(180deg) translateZ(23px);background:var(--red)}
+.cube i:nth-child(4){transform:rotateY(-90deg) translateZ(23px);background:var(--bg)}
+.cube i:nth-child(5){transform:rotateX(90deg) translateZ(23px);background:var(--ink)}
+.cube i:nth-child(6){transform:rotateX(-90deg) translateZ(23px);background:var(--lime)}
+.ground{position:absolute;left:12%;right:12%;bottom:6px;height:30px;background:radial-gradient(ellipse at center,rgba(0,0,0,.4),transparent 70%);filter:blur(6px);transform:scaleX(var(--gs,1))}
 
 /* manifesto */
 .man{background:var(--ink);color:var(--bg)}
@@ -74,23 +107,15 @@ nav ul a:hover{text-decoration:underline;text-underline-offset:5px}
 .tags span{border:1.5px solid currentColor;border-radius:99px;padding:3px 12px;font:400 13px var(--mono)}
 .card:nth-child(1) .tags,.card:nth-child(3) .tags,.card:nth-child(1),.card:nth-child(3){color:#141414}
 
-/* before/after */
+/* numbers */
 .ba{background:var(--lime);color:#141414;border-block:2px solid #141414}
 .ba .mono{color:#2e3a05}
 .ba h2{font-size:clamp(64px,14vw,210px);text-align:center}
 .ba h2 b{font-weight:400;display:inline-block;background:#141414;color:var(--lime);padding:0 .15em;margin:0 .08em;transform:rotate(3deg)}
-.pair{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin:44px 0}
-.pair figure{margin:0}
-.ph{aspect-ratio:4/3;border:3px solid #141414;border-radius:20px;overflow:hidden}
-.ph.b{background:#2a1512;display:grid;align-content:center;gap:7px;padding:22px;font:400 13px var(--mono);color:var(--red)}
-.ph.a{background:#e9ffa3;display:grid;place-items:center}
-.pair figcaption{font:400 14px var(--mono);margin-top:10px}
 .nums{display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
 .num{background:#141414;color:var(--bg);border-radius:20px;padding:24px}
 .num .mono{color:#b9b3a4}
 .num .v{font:400 clamp(44px,5vw,72px)/1 var(--disp);margin:14px 0 6px;color:var(--lime)}
-.num s{color:#8d8878;font:400 14px var(--mono);text-decoration-thickness:2px}
-.num em{font:700 14px var(--mono);color:#141414;background:var(--lime);padding:2px 8px;border-radius:99px;font-style:normal;margin-left:6px}
 
 /* work */
 .rail{display:flex;gap:22px;overflow-x:auto;padding:4px 4vw 28px;margin:0 -4vw;scroll-snap-type:x mandatory}
@@ -101,7 +126,7 @@ nav ul a:hover{text-decoration:underline;text-underline-offset:5px}
 .proj h3{font-size:44px}.proj p{margin:0}
 .rail::-webkit-scrollbar{height:10px}.rail::-webkit-scrollbar-thumb{background:var(--ink);border-radius:9px}
 
-/* process */
+/* process / certs */
 .steps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);border:2px solid var(--ink);border-radius:20px;overflow:hidden}
 .steps li{padding:28px;border-right:2px solid var(--ink);background:var(--card);min-height:290px;display:flex;flex-direction:column;gap:14px}
 .steps li:last-child{border:0;background:var(--yel);color:#141414}
@@ -117,8 +142,8 @@ footer{display:flex;justify-content:center;flex-wrap:wrap;gap:10px 34px;margin-t
 
 @media (max-width:900px){
  nav ul{display:none}
- .hero-grid,.pair,.stack{grid-template-columns:1fr}
- .photo{justify-self:center;max-width:360px}
+ .hero-grid,.stack{grid-template-columns:1fr}
+ .stage{justify-self:center;max-width:380px}
  .nums{grid-template-columns:1fr 1fr}
  .steps{grid-template-columns:1fr 1fr}.steps li:nth-child(2){border-right:0}.steps li{border-bottom:2px solid var(--ink)}
  section{padding:64px 5vw}
@@ -149,21 +174,25 @@ footer{display:flex;justify-content:center;flex-wrap:wrap;gap:10px 34px;margin-t
 @keyframes blink{50%{opacity:0}}
 @media (prefers-reduced-motion:reduce){.cmd .cur{animation:none}}
 
-/* 3D scroll + bounce effects */
+/* 3D scroll + bounce effects (replay on every scroll) */
 .rv{opacity:0;transform:perspective(900px) rotateX(22deg) translateY(70px) scale(.9);transform-origin:50% 100%;transition:transform .9s cubic-bezier(.34,1.56,.64,1),opacity .5s ease-out;will-change:transform}
 .rv.shown{opacity:1;transform:none}
 .rv.shown:hover{transform:translateY(-10px) scale(1.02)}
+.stage.rv.shown:hover{transform:none}
 .man mark.pop{animation:pop .8s cubic-bezier(.34,1.56,.64,1) both}
 @keyframes pop{0%{transform:scale(.4) rotate(-6deg);opacity:0}100%{transform:none;opacity:1}}
 .hero h1 .dev{animation:bob 2.6s ease-in-out infinite}
 @keyframes bob{0%,100%{transform:rotate(-2deg) translateY(0)}50%{transform:rotate(-2deg) translateY(-10px)}}
-@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.man mark.pop,.hero h1 .dev{animation:none}}
+/* scroll-linked headings: slide + tilt as you scroll */
+[data-par]{will-change:transform}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none;transition:none}.man mark.pop,.hero h1 .dev,.chip{animation:none}.photo{transition:none}}
 html.lenis,html.lenis body{height:auto}
 .lenis.lenis-smooth{scroll-behavior:auto!important}
 .lenis.lenis-stopped{overflow:hidden}
 </style>
 </head>
 <body id="top">
+<div class="prog" aria-hidden="true"></div>
 <nav>
  <a class="logo" href="#top" aria-label="CTRL + ME, back to top">CTRL + ME</a>
  <ul><li><a href="#about">About</a></li><li><a href="#skills">Skills</a></li><li><a href="#experience">Experience</a></li><li><a href="#projects">Projects</a></li><li><a href="#certifications">Certifications</a></li></ul>
@@ -179,10 +208,25 @@ html.lenis,html.lenis body{height:auto}
    <p>Hi, I’m Vishnu. I build clean Python, AI &amp; backend solutions.</p>
    <div class="cta"><a class="btn" href="VishnuPrasath.docx" download="VishnuPrasath.docx">Download Resume ↓</a><a class="btn alt" target="_blank" rel="noopener" href="https://linkedin.com/in/Vishnu2406">View LinkedIn →</a></div>
   </div>
-  <figure class="photo" style="margin:0">
-   <figcaption class="mono">Available for opportunities</figcaption>
-   <img src="photo.jpg" alt="Vishnu Prasath S" style="display:block">
-  </figure>
+  <div class="stage">
+   <figure class="photo">
+    <div class="layer l4"></div>
+    <div class="layer l3"></div>
+    <div class="layer l2"></div>
+    <div class="layer l1"></div>
+    <img src="photo.jpg" alt="Vishnu Prasath S" style="display:block">
+    <div class="shine"></div>
+    <figcaption class="mono">Available for opportunities</figcaption>
+    <span class="chip c1">Python</span>
+    <span class="chip c2">AI / ML</span>
+    <span class="chip c3">Backend</span>
+    <div class="cube" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="ring" aria-hidden="true">
+     <svg viewBox="0 0 128 128"><circle class="disc" cx="64" cy="64" r="60"/><defs><path id="cp" d="M64,64 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs><text><textPath href="#cp">SOFTWARE ENGINEER · 2027 ·</textPath></text><text x="64" y="72" text-anchor="middle" style="font-size:24px">★</text></svg>
+    </div>
+   </figure>
+   <div class="ground"></div>
+  </div>
  </div>
 </div></header>
 
@@ -193,7 +237,7 @@ html.lenis,html.lenis body{height:auto}
 </div></section>
 
 <section id="about"><div class="wrap">
- <div class="head"><div><p class="mono">// about</p><h2 class="d">About me</h2></div></div>
+ <div class="head"><div data-par="x"><p class="mono">// about</p><h2 class="d">About me</h2></div></div>
  <div class="about">
   <div class="panel">
    <p>I’ve worked as an AI Intern, building and evaluating supervised ML models with scikit-learn, and completed a University of Stuttgart seminar on virtual prototyping in vehicle development. Outside that, I build projects like an AI resume matcher and a city-wide vehicle tracking platform.</p>
@@ -215,7 +259,7 @@ html.lenis,html.lenis body{height:auto}
 </div></section>
 
 <section class="ba" id="numbers"><div class="wrap">
- <h2 class="d">By the <b>numbers</b></h2>
+ <h2 class="d" data-par="x">By the <b>numbers</b></h2>
  <div class="nums three" style="margin-top:44px">
   <div class="num"><span class="mono">Internships</span><div class="v"><span data-from="0" data-to="1">1</span></div></div>
   <div class="num"><span class="mono">Certifications</span><div class="v"><span data-from="0" data-to="4">4</span></div></div>
@@ -224,7 +268,7 @@ html.lenis,html.lenis body{height:auto}
 </div></section>
 
 <section id="skills"><div class="wrap">
- <div class="head"><div><p class="mono">// technical toolkit</p><h2 class="d">Skills</h2></div></div>
+ <div class="head"><div data-par="x"><p class="mono">// technical toolkit</p><h2 class="d">Skills</h2></div></div>
  <div class="stack skills">
   <article class="card"><h3 class="d">Languages</h3><div class="tags"><span>Python</span><span>SQL</span><span>C</span></div></article>
   <article class="card"><h3 class="d">Backend &amp; Web</h3><div class="tags"><span>FastAPI</span><span>Django</span><span>HTML</span><span>CSS</span><span>JavaScript</span></div></article>
@@ -235,7 +279,7 @@ html.lenis,html.lenis body{height:auto}
 </div></section>
 
 <section id="experience"><div class="wrap">
- <div class="head"><div><p class="mono">// where I’ve worked</p><h2 class="d">Experience</h2></div></div>
+ <div class="head"><div data-par="x"><p class="mono">// where I’ve worked</p><h2 class="d">Experience</h2></div></div>
  <div class="exp">
   <article class="panel"><span class="mono">University of Stuttgart (IKTD), Germany · Aug 2025 – Nov 2025</span><h3 class="d">Virtual Prototyping Seminar</h3><ul><li>Completed a 12-module online seminar on virtual prototyping methods and applications in vehicle development.</li><li>Trained in developing Virtual Reality and Mixed Reality applications using Unreal Engine 5.4 to simulate aspects of automotive development.</li></ul></article>
   <article class="panel"><span class="mono">Novalis Infotech</span><h3 class="d">AI Intern</h3><ul><li>Developed and evaluated 3 supervised ML models using scikit-learn.</li><li>Successfully delivered 5 AI tasks and mini-projects within scheduled deadlines.</li></ul></article>
@@ -243,7 +287,7 @@ html.lenis,html.lenis body{height:auto}
 </div></section>
 
 <section id="projects" style="padding-bottom:40px"><div class="wrap">
- <div class="head"><div><p class="mono">// featured work</p><h2 class="d">Projects</h2></div></div>
+ <div class="head"><div data-par="x"><p class="mono">// featured work</p><h2 class="d">Projects</h2></div></div>
 </div>
 <div class="rail" tabindex="0" aria-label="Projects">
  <article class="proj"><div class="cv">RESUME</div><div class="in"><span class="mono">Python · Flask · TF-IDF</span><h3 class="d">Resume Screener</h3><p>An AI-powered Flask resume matcher that uses TF-IDF vectorization and cosine similarity to score resumes against job descriptions, delivering results in under 3 seconds.</p><ul><li>TF-IDF vectorization</li><li>Cosine similarity matching</li><li>Results in under 3 seconds</li><li>Live demo on Render</li></ul><div class="lnk"><a target="_blank" rel="noopener" href="https://resume-screener-8lri.onrender.com">Live Demo →</a><a target="_blank" rel="noopener" href="https://github.com/vishnuprasath2406/resume-screener">View on GitHub →</a></div></div></article>
@@ -252,7 +296,7 @@ html.lenis,html.lenis body{height:auto}
 </div></section>
 
 <section id="certifications"><div class="wrap">
- <div class="head"><div><p class="mono">// learning &amp; credentials</p><h2 class="d">Certifications</h2></div></div>
+ <div class="head"><div data-par="x"><p class="mono">// learning &amp; credentials</p><h2 class="d">Certifications</h2></div></div>
  <ol class="steps certs">
   <li><span class="mono">IBM Skills Build</span><h3 class="d">Getting Started with Artificial Intelligence</h3></li>
   <li><span class="mono">AWS Academy</span><h3 class="d">Cloud Foundations</h3></li>
@@ -279,7 +323,8 @@ html.lenis,html.lenis body{height:auto}
   requestAnimationFrame(step);
  }
  if(matchMedia('(prefers-reduced-motion:reduce)').matches||!('IntersectionObserver' in window)){els.forEach(function(e){e.textContent=(e.dataset.pre||'')+e.dataset.to+(e.dataset.suf||'')});return}
- var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){run(e.target);io.unobserve(e.target)}})},{threshold:.6});
+ /* counters replay every time they scroll into view */
+ var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){run(e.target)}})},{threshold:.6});
  els.forEach(function(e){io.observe(e)});
 })();
 </script>
@@ -302,23 +347,36 @@ html.lenis,html.lenis body{height:auto}
 </script>
 <script>
 (function(){
- if(matchMedia('(prefers-reduced-motion:reduce)').matches||!('IntersectionObserver' in window))return;
- var sel='.photo,.man h2 .ln,.card,.panel,.proj,.steps li,.num,.pill,.soc a';
- var items=document.querySelectorAll(sel);
- var io=new IntersectionObserver(function(es){es.forEach(function(e){
-  if(!e.isIntersecting)return;var el=e.target;io.unobserve(el);
-  el.classList.add('shown');
-  el.querySelectorAll&&el.querySelectorAll('mark').forEach(function(m,i){m.style.animationDelay=(.35+i*.1)+'s';m.classList.add('pop')});
-  setTimeout(function(){el.style.transitionDelay=''},1400);
- })},{threshold:.15,rootMargin:'0px 0px -40px 0px'});
- items.forEach(function(el){
-  var sib=Array.prototype.indexOf.call(el.parentNode.children,el);
-  el.style.transitionDelay=(Math.min(sib,5)*0.1)+'s';
-  el.classList.add('rv');io.observe(el);
- });
- /* mouse-follow 3D tilt */
- if(matchMedia('(hover:hover) and (pointer:fine)').matches){
-  document.querySelectorAll('.card,.panel,.proj,.num,.photo,.steps li').forEach(function(el){
+ var reduce=matchMedia('(prefers-reduced-motion:reduce)').matches;
+ var fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
+
+ /* ---- scroll reveal: replays every time an element enters / leaves ---- */
+ if(!reduce&&'IntersectionObserver' in window){
+  var sel='.stage,.man h2 .ln,.card,.panel,.proj,.steps li,.num,.pill,.soc a';
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){
+   var el=e.target,marks=el.querySelectorAll('mark');
+   clearTimeout(el._t);
+   if(e.isIntersecting){
+    el.style.transitionDelay=el.dataset.d;
+    el.classList.add('shown');
+    marks.forEach(function(m,i){m.style.animationDelay=(.35+i*.1)+'s';m.classList.add('pop')});
+    el._t=setTimeout(function(){el.style.transitionDelay=''},1400);
+   }else{
+    el.style.transitionDelay='0s';
+    el.classList.remove('shown');
+    marks.forEach(function(m){m.classList.remove('pop')});
+   }
+  })},{threshold:.12,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll(sel).forEach(function(el){
+   var sib=Array.prototype.indexOf.call(el.parentNode.children,el);
+   el.dataset.d=(Math.min(sib,5)*0.1)+'s';
+   el.classList.add('rv');io.observe(el);
+  });
+ }
+
+ /* ---- mouse-follow 3D tilt on boxes ---- */
+ if(fine&&!reduce){
+  document.querySelectorAll('.card,.panel,.proj,.num,.steps li').forEach(function(el){
    el.addEventListener('pointermove',function(ev){
     if(!el.classList.contains('shown'))return;
     var r=el.getBoundingClientRect(),x=(ev.clientX-r.left)/r.width-.5,y=(ev.clientY-r.top)/r.height-.5;
@@ -328,6 +386,46 @@ html.lenis,html.lenis body{height:auto}
    el.addEventListener('pointerleave',function(){el.style.transition='';el.style.transform=''});
   });
  }
+
+ /* ---- scroll-linked effects (run on every scroll frame) ---- */
+ var ph=document.querySelector('.photo'),stage=document.querySelector('.stage'),
+     ring=document.querySelector('.ring'),cube=document.querySelector('.cube'),
+     gnd=document.querySelector('.ground'),prog=document.querySelector('.prog'),
+     pars=[].slice.call(document.querySelectorAll('[data-par]')),
+     mx=0,my=0,tick=false;
+
+ function upd(){
+  tick=false;
+  var vh=innerHeight,sy=scrollY||pageYOffset,
+      max=Math.max(1,document.documentElement.scrollHeight-vh);
+  prog.style.setProperty('--p',Math.min(1,sy/max));
+  if(reduce)return;
+
+  /* 3D photo: rotates with scroll (full flip range) + follows the mouse */
+  var r=stage.getBoundingClientRect(),
+      p=Math.max(-1.2,Math.min(1.2,((r.top+r.height/2)-vh/2)/vh));
+  ph.style.setProperty('--ry',(-14-p*40+mx*22)+'deg');
+  ph.style.setProperty('--rx',(5+p*16-my*16)+'deg');
+  ph.style.setProperty('--rz',(p*-4)+'deg');
+  ph.style.setProperty('--sh',(50+p*70+mx*40)+'%');
+  ring.style.setProperty('--sp',(sy*0.35)+'deg');
+  cube.style.setProperty('--cx',(-25+sy*0.25)+'deg');
+  cube.style.setProperty('--cy',(35+sy*0.4)+'deg');
+  gnd.style.setProperty('--gs',1+Math.abs(p)*.25);
+
+  /* section headings slide + tilt as they pass through the viewport */
+  pars.forEach(function(el){
+   var b=el.getBoundingClientRect(),k=Math.max(-1,Math.min(1,((b.top+b.height/2)-vh/2)/(vh*.8)));
+   el.style.transform='translateX('+(k*-60)+'px) perspective(700px) rotateX('+(k*14)+'deg)';
+  });
+ }
+ function req(){if(!tick){tick=true;requestAnimationFrame(upd)}}
+ addEventListener('scroll',req,{passive:true});addEventListener('resize',req);
+ if(fine&&!reduce){
+  stage.addEventListener('pointermove',function(ev){var r=stage.getBoundingClientRect();mx=(ev.clientX-r.left)/r.width-.5;my=(ev.clientY-r.top)/r.height-.5;req()});
+  stage.addEventListener('pointerleave',function(){mx=my=0;req()});
+ }
+ upd();
 })();
 </script>
 </body>
